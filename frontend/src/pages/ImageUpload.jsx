@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from 'axios';
 
 export default function ImageUpload() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -10,7 +11,7 @@ export default function ImageUpload() {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setSelectedImage(URL.createObjectURL(file));
+      setSelectedImage(file);
       setImageName(file.name); // Store the file name
     }
   };
@@ -20,7 +21,7 @@ export default function ImageUpload() {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     if (file) {
-      setSelectedImage(URL.createObjectURL(file));
+      setSelectedImage(file);
       setImageName(file.name); // Store the file name
     }
     setIsDragging(false);
@@ -38,15 +39,33 @@ export default function ImageUpload() {
   };
 
   // Simulate a disease prediction and show the result
-  const handlePredict = () => {
-    // Simulated result
-    const simulatedResult = {
-      disease: "Powdery Mildew",
-      accuracy: "92%"
-    };
+  const handlePredict = async (e) => {
+    if (!selectedImage) {
+      alert("Please select an image first.");
+      return;
+    }
 
-    // Set the simulated prediction result
-    setPredictionResult(simulatedResult);
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedImage);
+
+      const response = await axios.post('http://127.0.0.1:5000/predict', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      const result = {
+        disease: response.data.predicted_class,
+        accuracy: response.data.prediction_accuracy
+      };
+  
+      // Set the prediction result
+      setPredictionResult(result);
+      
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -111,7 +130,7 @@ export default function ImageUpload() {
           ) : (
             <div className="flex flex-col items-center w-full">
               <img
-                src={selectedImage}
+                src={URL.createObjectURL(selectedImage)}
                 alt="Preview"
                 className="h-64 w-full object-contain rounded-lg"
               />
