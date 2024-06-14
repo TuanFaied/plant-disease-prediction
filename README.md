@@ -74,6 +74,6 @@ Plant Disease Prediction leverages machine learning to identify diseases in plan
 ### Google Colab Link
 
 For training the model, you can use the provided Google Colab notebook:
-[Google Colab Link](https://colab.research.google.com/drive/1FmbMFc1EcbUwDrGJNr8KO4SLgi38VHYY?usp=sharing)
+[Google Colab Link](https://colab.research.google.com/drive/14HFx5eWrlIKnzqZp07ziSRzzJGnJ6JJb?usp=sharing)
 
 
